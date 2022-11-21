@@ -11,13 +11,13 @@ export async function signUp(req, res) {
         res.sendStatus(409);
     } else {
         try {
-            const passwordHash = bcrypt.hashSync(user.password, 10);    
+            const passwordHash = bcrypt.hashSync(user.password, 10);
             user = {
                 name: user.name,
                 email: user.email,
                 password: passwordHash
-            }  
-            await usersCollection.insertOne({ ...user });      
+            }
+            await usersCollection.insertOne({ ...user });
             res.sendStatus(201);
         } catch(err) {
             console.error(err);
@@ -29,13 +29,13 @@ export async function signUp(req, res) {
 export async function signIn(req, res) {
     const { email, password } = req.body;
     const token = uuidV4();
-  
+
     try {
         const userExists = await usersCollection.findOne({ email });
         await sessionsCollection.insertOne({
             token,
             userId: userExists._id,
-        });  
+        });
         res.send({ token });
     } catch (err) {
         console.log(err);
